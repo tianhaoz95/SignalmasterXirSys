@@ -1,7 +1,7 @@
 var socketIO = require('socket.io'),
     uuid = require('node-uuid'),
     crypto = require('crypto');
-var https = require("https");
+var axios = require("axios");
 
 module.exports = function (server, config) {
     var io = socketIO.listen(server);
@@ -13,7 +13,6 @@ module.exports = function (server, config) {
             video: true,
             audio: false
         };
-        console.log(options);
         // pass a message to another id
         client.on('message', function (details) {
             if (!details) return;
@@ -100,63 +99,31 @@ module.exports = function (server, config) {
             ));
         });
 
-
-        // tell client about stun and turn servers and generate nonces
-        //client.emit('stunservers', config.stunservers || []);
-
         // create shared secret nonces for TURN authentication
         // the process is described in draft-uberti-behave-turn-rest
         var credentials = [];
         // allow selectively vending turn credentials based on origin.
         var origin = client.handshake.headers.origin;
-        /*if (!config.turnorigins || config.turnorigins.indexOf(origin) !== -1) {
-            config.turnservers.forEach(function (server) {
-                var hmac = crypto.createHmac('sha1', server.secret);
-                // default to 86400 seconds timeout unless specified
-                var username = Math.floor(new Date().getTime() / 1000) + (parseInt(server.expiry || 86400, 10)) + "";
-                hmac.update(username);
-                credentials.push({
-                    username: username,
-                    credential: hmac.digest('base64'),
-                    urls: server.urls || server.url
-                });
-            });
-        }*/
 
-        var options = {
-            host: xirsys.gateway,
-            path: "/_turn/"+xirsys.info.channel,
-            method: "PUT",
-            headers: {
-                "Authorization": "Basic " + new Buffer( xirsys.info.ident+":"+xirsys.info.secret ).toString("base64")
-            }
-        };
-
-        console.log("right before sending https request");
-
-        var httpreq = https.request(options, function(httpres) {
-            console.log("https request to xirSys sent");
-            var str = "";
-            httpres.on("data", function(data){ str += data; });
-            httpres.on("error", function(e){ console.log("error: ",e); });
-            httpres.on("end", function(){
-                console.log("response: ", str);
-                var result = JSON.parse(str);
-                var iceServers = result.v.iceServers;
-                var turnservers = [],
-                    stunservers = [];
-                iceServers.forEach(function (server) {
-                    if(server.url.indexOf("stun:") != -1){
-                        stunservers.push(server);
-                    }else{
-                        turnservers.push(server);
-                    }
-                });
-                client.emit('stunservers', stunservers || []);
-                client.emit('turnservers', turnservers);
-            });
+        axios.put("https://acumany:4b6aea04-6152-11e7-9d16-3fa9b82ffd4f@global.xirsys.net/_turn/Acumany")
+        .then((res) => {
+          var result = res.data;
+          var iceServers = result.v.iceServers;
+          var turnservers = [],
+              stunservers = [];
+          iceServers.forEach(function (server) {
+              if(server.url.indexOf("stun:") != -1){
+                  stunservers.push(server);
+              }else{
+                  turnservers.push(server);
+              }
+          });
+          client.emit('stunservers', stunservers || []);
+          client.emit('turnservers', turnservers);
+        })
+        .catch(function (err) {
+          console.log("axios error => ", err);
         });
-        httpreq.end();
     });
 
 

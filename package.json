@@ -3,6 +3,7 @@
   "description": "Simple signaling server for SimpleWebRTC",
   "version": "1.0.1",
   "dependencies": {
+    "axios": "^0.16.2",
     "colors": "^1.1.2",
     "getconfig": "2.1.0",
     "node-uuid": "1.2.0",
