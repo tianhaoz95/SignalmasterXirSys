@@ -144,7 +144,8 @@ module.exports = function (server, config) {
             method: "PUT",
             headers: {
                 "Authorization": "Basic " + new Buffer( xirsys.info.ident+":"+xirsys.info.secret ).toString("base64")
-            }
+            },
+            agent: false
         };
         console.log("prepare to make put request");
         var httpreq = https.request(options, function(httpres) {
