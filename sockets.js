@@ -3,6 +3,7 @@ var socketIO = require('socket.io'),
     crypto = require('crypto');
 var axios = require("axios");
 var https = require("https");
+var dns = require("dns");
 
 module.exports = function (server, config) {
     var io = socketIO.listen(server);
@@ -106,7 +107,7 @@ module.exports = function (server, config) {
         // allow selectively vending turn credentials based on origin.
         var origin = client.handshake.headers.origin;
 
-
+        /*
         var requestConfig = {
           url: "/_turn/" + xirsys.info.channel,
           baseUrl: "https://" + xirsys.gateway,
@@ -115,7 +116,7 @@ module.exports = function (server, config) {
             "Authorization": "Basic " + new Buffer( xirsys.info.ident+":"+xirsys.info.secret ).toString("base64")
           }
         };
-        /*
+
         axios(requestConfig)
         .then((res) => {
           var result = res.data;
@@ -146,6 +147,7 @@ module.exports = function (server, config) {
             "Authorization": "Basic " + new Buffer( xirsys.info.ident+":"+xirsys.info.secret ).toString("base64")
           }
         };
+        dns.lookup(options.host, console.log);
         console.log("prepare to make put request");
         var httpreq = https.request(options, function(httpres) {
           console.log("receive response from put request");
