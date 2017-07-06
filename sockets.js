@@ -132,6 +132,8 @@ module.exports = function (server, config) {
             }
         };
 
+        console.log("right before sending https request");
+
         var httpreq = https.request(options, function(httpres) {
             console.log("https request to xirSys sent");
             var str = "";
