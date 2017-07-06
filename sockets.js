@@ -133,11 +133,12 @@ module.exports = function (server, config) {
         };
 
         var httpreq = https.request(options, function(httpres) {
+            console.log("https request to xirSys sent");
             var str = "";
             httpres.on("data", function(data){ str += data; });
             httpres.on("error", function(e){ console.log("error: ",e); });
             httpres.on("end", function(){
-                //console.log("response: ", str);
+                console.log("response: ", str);
                 var result = JSON.parse(str);
                 var iceServers = result.v.iceServers;
                 var turnservers = [],
