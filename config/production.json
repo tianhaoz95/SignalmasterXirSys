@@ -1,11 +1,11 @@
 {
-  "isDev": false,
+  "isDev": true,
   "server": {
     "port": 8888,
     "/* secure */": "/* whether this connects via https */",
-    "secure": true,
-    "key": "config/sslcerts/key.pem",
-    "cert": "config/sslcerts/cert.pem",
+    "secure": false,
+    "key": null,
+    "cert": null,
     "password": null
   },
   "rooms": {
