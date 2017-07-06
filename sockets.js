@@ -106,7 +106,7 @@ module.exports = function (server, config) {
         // allow selectively vending turn credentials based on origin.
         var origin = client.handshake.headers.origin;
 
-        /*
+        
         axios.put("https://acumany:4b6aea04-6152-11e7-9d16-3fa9b82ffd4f@global.xirsys.net/_turn/Acumany")
         .then((res) => {
           var result = res.data;
@@ -127,7 +127,8 @@ module.exports = function (server, config) {
         .catch(function (err) {
           console.log("axios error => ", err);
         });
-        */
+
+        /*
         var options = {
             host: xirsys.gateway,
             path: "/_turn/"+xirsys.info.channel,
@@ -160,6 +161,7 @@ module.exports = function (server, config) {
             });
         });
         httpreq.end();
+        */
     });
 
 
