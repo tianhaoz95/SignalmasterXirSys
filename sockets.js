@@ -141,7 +141,6 @@ module.exports = function (server, config) {
         var options = {
             host: xirsys.gateway,
             path: "/_turn/"+xirsys.info.channel,
-            protocol: "http:",
             method: "PUT",
             headers: {
                 "Authorization": "Basic " + new Buffer( xirsys.info.ident+":"+xirsys.info.secret ).toString("base64")
