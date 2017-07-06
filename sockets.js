@@ -2,6 +2,7 @@ var socketIO = require('socket.io'),
     uuid = require('node-uuid'),
     crypto = require('crypto');
 var axios = require("axios");
+var https = require("https");
 
 module.exports = function (server, config) {
     var io = socketIO.listen(server);
@@ -105,6 +106,7 @@ module.exports = function (server, config) {
         // allow selectively vending turn credentials based on origin.
         var origin = client.handshake.headers.origin;
 
+        /*
         axios.put("https://acumany:4b6aea04-6152-11e7-9d16-3fa9b82ffd4f@global.xirsys.net/_turn/Acumany")
         .then((res) => {
           var result = res.data;
@@ -125,6 +127,39 @@ module.exports = function (server, config) {
         .catch(function (err) {
           console.log("axios error => ", err);
         });
+        */
+        var options = {
+            host: xirsys.gateway,
+            path: "/_turn/"+xirsys.info.channel,
+            method: "PUT",
+            headers: {
+                "Authorization": "Basic " + new Buffer( xirsys.info.ident+":"+xirsys.info.secret ).toString("base64")
+            }
+        };
+        console.log("prepare to make put request");
+        var httpreq = https.request(options, function(httpres) {
+            console.log("receive response from put request");
+            var str = "";
+            httpres.on("data", function(data){ str += data; });
+            httpres.on("error", function(e){ console.log("error: ",e); });
+            httpres.on("end", function(){
+                console.log("response: ", str);
+                var result = JSON.parse(str);
+                var iceServers = result.v.iceServers;
+                var turnservers = [],
+                    stunservers = [];
+                iceServers.forEach(function (server) {
+                    if(server.url.indexOf("stun:") != -1){
+                        stunservers.push(server);
+                    }else{
+                        turnservers.push(server);
+                    }
+                });
+                client.emit('stunservers', stunservers || []);
+                client.emit('turnservers', turnservers);
+            });
+        });
+        httpreq.end();
     });
 
 
