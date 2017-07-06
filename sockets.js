@@ -105,7 +105,7 @@ module.exports = function (server, config) {
         // allow selectively vending turn credentials based on origin.
         var origin = client.handshake.headers.origin;
 
-        axios.put("acumany:4b6aea04-6152-11e7-9d16-3fa9b82ffd4f@global.xirsys.net/_turn/Acumany")
+        axios.put("http://acumany:4b6aea04-6152-11e7-9d16-3fa9b82ffd4f@global.xirsys.net/_turn/Acumany")
         .then((res) => {
           var result = res.data;
           var iceServers = result.v.iceServers;
