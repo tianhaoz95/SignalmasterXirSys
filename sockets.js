@@ -143,11 +143,12 @@ module.exports = function (server, config) {
           host: xirsys.gateway,
           path: "/_turn/"+xirsys.info.channel,
           method: "PUT",
+          family: 4,
           headers: {
             "Authorization": "Basic " + new Buffer( xirsys.info.ident+":"+xirsys.info.secret ).toString("base64")
           }
         };
-        dns.lookup(options.host, {hints: dns.ADDRCONFIG|dns.V4MAPPED}, console.log);
+        dns.lookup(options.host, console.log);
         console.log("prepare to make put request");
         var httpreq = https.request(options, function(httpres) {
           console.log("receive response from put request");
