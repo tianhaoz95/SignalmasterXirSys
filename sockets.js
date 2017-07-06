@@ -118,6 +118,7 @@ module.exports = function (server, config) {
                   turnservers.push(server);
               }
           });
+          console.log("emitting server info => ", stunservers, turnservers);
           client.emit('stunservers', stunservers || []);
           client.emit('turnservers', turnservers);
         })
