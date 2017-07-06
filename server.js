@@ -11,15 +11,8 @@ var yetify = require('yetify'),
     server = null;
 
 // Create an http(s) server instance to that socket.io can listen to
-if (config.server.secure) {
-    server = require('https').Server({
-        key: fs.readFileSync(config.server.key),
-        cert: fs.readFileSync(config.server.cert),
-        passphrase: config.server.password
-    }, server_handler);
-} else {
-    server = require('http').Server(server_handler);
-}
+server = require('http').Server(server_handler);
+
 server.listen(port, function(err) {
     if (err) {
         throw err
@@ -32,9 +25,5 @@ sockets(server, config);
 if (config.uid) process.setuid(config.uid);
 
 var httpUrl;
-if (config.server.secure) {
-    httpUrl = "https://localhost:" + port;
-} else {
-    httpUrl = "http://localhost:" + port;
-}
 
+httpUrl = "http://localhost:" + port;
