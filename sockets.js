@@ -139,7 +139,7 @@ module.exports = function (server, config) {
         */
 
         var options = {
-            host: "https://" + xirsys.gateway,
+            host: xirsys.gateway,
             path: "/_turn/"+xirsys.info.channel,
             method: "PUT",
             headers: {
