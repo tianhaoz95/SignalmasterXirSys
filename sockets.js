@@ -139,36 +139,35 @@ module.exports = function (server, config) {
         */
 
         var options = {
-            host: xirsys.gateway,
-            path: "/_turn/"+xirsys.info.channel,
-            method: "PUT",
-            headers: {
-                "Authorization": "Basic " + new Buffer( xirsys.info.ident+":"+xirsys.info.secret ).toString("base64")
-            },
-            agent: false
+          host: xirsys.gateway,
+          path: "/_turn/"+xirsys.info.channel,
+          method: "PUT",
+          headers: {
+            "Authorization": "Basic " + new Buffer( xirsys.info.ident+":"+xirsys.info.secret ).toString("base64")
+          }
         };
         console.log("prepare to make put request");
         var httpreq = https.request(options, function(httpres) {
-            console.log("receive response from put request");
-            var str = "";
-            httpres.on("data", function(data){ str += data; });
-            httpres.on("error", function(e){ console.log("error: ",e); });
-            httpres.on("end", function(){
-                console.log("response: ", str);
-                var result = JSON.parse(str);
-                var iceServers = result.v.iceServers;
-                var turnservers = [],
-                    stunservers = [];
-                iceServers.forEach(function (server) {
-                    if(server.url.indexOf("stun:") != -1){
-                        stunservers.push(server);
-                    }else{
-                        turnservers.push(server);
-                    }
-                });
-                client.emit('stunservers', stunservers || []);
-                client.emit('turnservers', turnservers);
+          console.log("receive response from put request");
+          var str = "";
+          httpres.on("data", function(data){ str += data; });
+          httpres.on("error", function(e){ console.log("error: ",e); });
+          httpres.on("end", function(){
+            console.log("response: ", str);
+            var result = JSON.parse(str);
+            var iceServers = result.v.iceServers;
+            var turnservers = [],
+                stunservers = [];
+            iceServers.forEach(function (server) {
+              if(server.url.indexOf("stun:") != -1){
+                stunservers.push(server);
+              }else{
+                turnservers.push(server);
+              }
             });
+            client.emit('stunservers', stunservers || []);
+            client.emit('turnservers', turnservers);
+          });
         });
         httpreq.end();
 
