@@ -13,7 +13,7 @@
     "maxClients": 0
   },
   "xirsys": {
-    "gateway": "https://global.xirsys.net",
+    "gateway": "w3.xirsys.com",
     "info": {
       "ident": "acumany",
       "secret": "4b6aea04-6152-11e7-9d16-3fa9b82ffd4f",
