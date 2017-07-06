@@ -5,6 +5,9 @@ var yetify = require('yetify'),
     sockets = require('./sockets'),
     port = parseInt(process.env.PORT || config.server.port, 10),
     server_handler = function (req, res) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+      	res.setHeader('Access-Control-Request-Method', '*');
+      	res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
         res.writeHead(404);
         res.end();
     },
